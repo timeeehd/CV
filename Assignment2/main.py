@@ -1,8 +1,8 @@
 import cv2
-import numpy as np
 import matplotlib.pyplot as plt
-import random
-from Assignment2.convolution import *
+
+from Assignment2.IdealAndButterWorthFilter import get_ideal_filter
+from convolution import *
 
 
 def contrast_stretching(img, a=50, b=150, ya=30, yb=200, alpha=0.3, beta=2, gamma=1, L=256):
@@ -184,12 +184,61 @@ img = cv2.imread('lab2b.png', cv2.IMREAD_COLOR)
 img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 fft_res = np.fft.fft2(img)
 plt.imshow(np.log10(np.abs(fft_res)), cmap='gray')
-plt.show()
+# plt.show()
 fft_shift_res = np.fft.fftshift(fft_res)
 plt.imshow(np.log10(np.abs(fft_shift_res)), cmap='gray')
-plt.show()
+# plt.show()
 fft_shift_ifft2 = np.fft.ifft2(fft_shift_res)
 plt.imshow(np.log10(np.abs(fft_shift_ifft2)), cmap='gray')
+# plt.show()
+
+# fig, ((ax,ax1, ax2), (ax5,ax3, ax4)) = plt.subplots(2, 3, figsize=(12, 8))
+# ax.imshow(img, cmap='gray')
+# H = get_butterworth_filter(img, filter_type='low_pass')
+# filtered_img = H*fft_res
+# fft_shift_ifft2 = np.fft.ifft2(filtered_img)
+# ax1.imshow(np.log10(np.abs(fft_shift_ifft2)), cmap='gray')
+# H = get_butterworth_filter(img, filter_type='high_pass')
+# filtered_img = H*fft_res
+# fft_shift_ifft2 = np.fft.ifft2(filtered_img)
+# ax2.imshow(np.log10(np.abs(fft_shift_ifft2)), cmap='gray')
+#
+# H = get_ideal_filter(img, filter_type='high_pass')
+# filtered_img = H*fft_res
+# fft_shift_ifft2 = np.fft.ifft2(filtered_img)
+# ax5.imshow(np.log10(np.abs(fft_shift_ifft2)), cmap='gray')
+#
+# H = get_ideal_filter(img, filter_type='low_pass')
+# filtered_img = H*fft_res
+# fft_shift_ifft2 = np.fft.ifft2(filtered_img)
+# ax3.imshow(np.log10(np.abs(fft_shift_ifft2)), cmap='gray')
+#
+# H = get_ideal_filter(img, filter_type='low_pass')
+# filtered_img = H*fft_shift_res
+# fft_shift_ifft2 = np.fft.ifft2(filtered_img)
+# ax4.imshow(np.log10(np.abs(fft_shift_ifft2)), cmap='gray')
+
+# plt.show()
+
+img2b = cv2.imread('lab2b.png', cv2.IMREAD_COLOR)
+img2b = cv2.cvtColor(img2b, cv2.COLOR_BGR2GRAY)
+H = get_ideal_filter(img2b)
+plt.imshow(H)
+plt.show()
+
+fft_res = np.fft.fft2(img2b)
+plt.imshow(np.log10(np.abs(fft_res)), cmap='gray')
+plt.show()
+
+fft_res = np.fft.fftshift(fft_res)
+plt.imshow(np.log10(np.abs(fft_res)), cmap='gray')
+plt.show()
+
+fft_res = fft_res * H
+plt.imshow(np.log10(np.abs(fft_res)), cmap='gray')
 plt.show()
 
 
+fft_inverse = np.fft.ifft2(fft_res)
+plt.imshow(np.abs(fft_inverse), cmap='gray')
+plt.show()
